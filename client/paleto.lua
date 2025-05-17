@@ -24,29 +24,33 @@ RegisterNetEvent('qb-bankrobbery:UseBankcardA', function()
     QBCore.Functions.TriggerCallback('qb-bankrobbery:server:isRobberyActive', function(isBusy)
         if not isBusy then
             if CurrentCops >= Config.MinimumPaletoPolice then
-                if not Config.BigBanks["paleto"]["isOpened"] then
-                    Config.ShowRequiredItems(nil, false)
-                    loadAnimDict("anim@gangops@facility@servers@")
-                    TaskPlayAnim(ped, 'anim@gangops@facility@servers@', 'hotwire', 3.0, 3.0, -1, 1, 0, false, false, false)
-                    QBCore.Functions.Progressbar("security_pass", Lang:t("general.validating_bankcard"), math.random(5000, 10000), false, true, {
-                        disableMovement = true,
-                        disableCarMovement = true,
-                        disableMouse = false,
-                        disableCombat = true,
-                    }, {}, {}, {}, function() -- Done
-                        StopAnimTask(ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
-                        TriggerServerEvent('qb-bankrobbery:server:setBankState', 'paleto')
-                        TriggerServerEvent('qb-bankrobbery:server:removeBankCard', '01')
-                        Config.DoorlockAction(4, false)
-                        if copsCalled or not Config.BigBanks["paleto"]["alarm"] then return end
-                        TriggerServerEvent("qb-bankrobbery:server:callCops", "paleto", 0, pos)
-                        copsCalled = true
-                    end, function() -- Cancel
-                        StopAnimTask(ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
-                        QBCore.Functions.Notify(Lang:t("error.cancel_message"), "error")
-                    end)
+                if CurrentCops >= Config.MinimumHITNCops then
+                    if not Config.BigBanks["paleto"]["isOpened"] then
+                        Config.ShowRequiredItems(nil, false)
+                        loadAnimDict("anim@gangops@facility@servers@")
+                        TaskPlayAnim(ped, 'anim@gangops@facility@servers@', 'hotwire', 3.0, 3.0, -1, 1, 0, false, false, false)
+                        QBCore.Functions.Progressbar("security_pass", Lang:t("general.validating_bankcard"), math.random(5000, 10000), false, true, {
+                            disableMovement = true,
+                            disableCarMovement = true,
+                            disableMouse = false,
+                            disableCombat = true,
+                        }, {}, {}, {}, function() -- Done
+                            StopAnimTask(ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
+                            TriggerServerEvent('qb-bankrobbery:server:setBankState', 'paleto')
+                            TriggerServerEvent('qb-bankrobbery:server:removeBankCard', '01')
+                            Config.DoorlockAction(4, false)
+                            if copsCalled or not Config.BigBanks["paleto"]["alarm"] then return end
+                            TriggerServerEvent("qb-bankrobbery:server:callCops", "paleto", 0, pos)
+                            copsCalled = true
+                        end, function() -- Cancel
+                            StopAnimTask(ped, "anim@gangops@facility@servers@", "hotwire", 1.0)
+                            QBCore.Functions.Notify(Lang:t("error.cancel_message"), "error")
+                        end)
+                    else
+                        QBCore.Functions.Notify(Lang:t("error.bank_already_open"), "error")
+                    end
                 else
-                    QBCore.Functions.Notify(Lang:t("error.bank_already_open"), "error")
+                    QBCore.Functions.Notify(Lang:t("error.minimum_police_required", {police = Config.MinimumHITNCops}), "error")
                 end
             else
                 QBCore.Functions.Notify(Lang:t("error.minimum_police_required", {police = Config.MinimumPaletoPolice}), "error")

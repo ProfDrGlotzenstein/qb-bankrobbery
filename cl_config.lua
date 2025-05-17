@@ -56,4 +56,5 @@ Config.MinimumPaletoPolice = 0
 Config.MinimumPacificPolice = 0
 Config.MinimumFleecaPolice = 0
 Config.MinimumThermitePolice = 0
+Config.MinimumHITNCops = 2
 Config.OutlawCooldown = 5 -- The amount of minutes it takes for the cops to be able to be called again after they were called
